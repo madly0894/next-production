@@ -21,7 +21,6 @@ next-env.d.ts
 .DS_Store
 
 # debug
-package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
