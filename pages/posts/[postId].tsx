@@ -1,8 +1,12 @@
 import React, {useEffect, useState, useRef} from "react";
-import Layout from "../../components/Layout";
+// Hoc
+import {useRouter} from "next/router";
+// Redux
 import {connect} from "react-redux";
 import {get_comments, post_createComment} from "../../redux/actions/postAction";
-import {useRouter} from "next/router";
+// Components
+import Layout from "../../components/Layout";
+import {Button, Card, ListGroup} from "react-bootstrap";
 
 type Props = {
     post: any,
@@ -19,22 +23,22 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
 
     const ref = useRef<HTMLTextAreaElement>(null);
 
-    function handleCreateComment () {
+    const handleCreateComment = () => {
         post_createComment(body, Number(postId));
         setBody("");
-    }
+    };
 
-    function handleChange (event: React.ChangeEvent<HTMLTextAreaElement>) {
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setBody(event.target.value);
-    }
+    };
 
-    function handleKeyPress (e: React.KeyboardEvent) {
+    const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             post_createComment(body, Number(postId));
             ref.current!.blur();
             setBody("");
         }
-    }
+    };
 
     useEffect(() => {
         get_comments(Number(postId));
@@ -43,13 +47,13 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
     return (
         <Layout title={`Post: ${postId}`}>
             <div className="container">
-                <div className="card mx-auto">
-                    <img src="/bg.jpeg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <h3 className="card-title font-weight-bold text-capitalize">{post.title}</h3>
-                        <p className="card-text text-muted">{post.body}</p>
-                    </div>
-                    <div className="card-footer">
+                <Card className="card mx-auto">
+                    <Card.Img variant="top" src="/bg.jpeg" />
+                    <Card.Body className="text-center">
+                        <Card.Title className="font-weight-bold text-capitalize">{post && post.title}</Card.Title>
+                        <Card.Text className="text-muted">{post && post.body}</Card.Text>
+                    </Card.Body>
+                    <Card.Footer>
                         <div className="panel mt-3">
                             <div className="panel-body">
                                 <textarea
@@ -62,31 +66,31 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
                                     onKeyPress={e => handleKeyPress(e)}
                                 />
                                 <div className="text-right mt-3">
-                                    <button
-                                        className="btn btn-sm btn-primary"
+                                    <Button
+                                        size="sm"
                                         type="button"
                                         onClick={handleCreateComment}
                                     >
                                         Share
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
                         <hr/>
                         <h5>Comments</h5>
-                        <ul className="list-group">
+                        <ListGroup variant="flush">
                             {
-                                post.comments && post.comments.map(c => {
+                                post && post.comments && post.comments.map(c => {
                                     return (
-                                        <li key={c.id} className="list-group-item">
-                                            {c.body}
-                                        </li>
+                                        <ListGroup.Item key={c.id}>
+                                            {c && c.body}
+                                        </ListGroup.Item>
                                     );
                                 })
                             }
-                        </ul>
-                    </div>
-                </div>
+                        </ListGroup>
+                    </Card.Footer>
+                </Card>
 
             </div>
         </Layout>

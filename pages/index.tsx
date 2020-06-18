@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react';
+// Redux
 import {connect} from "react-redux";
-import {get_allPosts, delete_post} from "../redux/actions/postAction";
+import {get_allPosts, delete_post, put_updatePost} from "../redux/actions/postAction";
+// Components
 import Layout from '../components/Layout';
+import EditPost from "../components/EditPost";
 import Link from "next/link";
+import {Alert} from "react-bootstrap";
 // Styles
 import styled from "styled-components";
 
@@ -11,13 +15,18 @@ declare var confirm: (question: string) => boolean;
 type Props = {
     posts: any
     get_allPosts() : void,
-    delete_post(id: number) : void
+    delete_post(id: number) : void,
+    put_updatePost(id: number, title: string, body: string) : void
 }
 
-const Index: React.FC<Props> = ({posts, get_allPosts, delete_post}) => {
+const Index: React.FC<Props> = ({posts, get_allPosts, delete_post, put_updatePost}) => {
 
     const [state, setState] = useState<any>({
-        isHovered: {}
+        isHovered: {},
+        open: false,
+        id: "",
+        title: "",
+        body: ""
     });
 
     useEffect(() => {
@@ -32,16 +41,43 @@ const Index: React.FC<Props> = ({posts, get_allPosts, delete_post}) => {
 
     function handleMouseLeave(id: number) {
         setState( {
+            ...state,
             isHovered: { [id]: false }
         });
     }
 
-    function handleEdit() {
+    const handleOpenModal = (id: number) => {
+        setState({
+            ...state,
+            open: true,
+            id: id
+        });
+    };
 
-    }
+    const handleCloseModal = () => {
+        setState({
+            ...state,
+            open: false
+        });
+    };
+
+    const handleChangeFields = (val: React.ChangeEvent<any>, key: string) => {
+        setState({
+            ...state,
+            [key]: val
+        });
+    };
+
+    const handleEdit = () => {
+        setState({
+            ...state,
+            open: false
+        });
+        put_updatePost(state.id, state.title, state.body);
+    };
 
     function handleDelete(id: number) {
-        const shouldRemove = confirm(`Are you sure delete ${id}`);
+        const shouldRemove = confirm(`Are you sure delete post: ${id}?`);
         if(shouldRemove) {
             delete_post(id);
         }
@@ -76,7 +112,10 @@ const Index: React.FC<Props> = ({posts, get_allPosts, delete_post}) => {
                                                     </a>
                                                 </Link>
                                                 <div className="card-footer">
-                                                    <button className="btn btn-primary mr-2">
+                                                    <button
+                                                        className="btn btn-primary mr-2"
+                                                        onClick={() => handleOpenModal(p.id)}
+                                                    >
                                                         Edit
                                                     </button>
                                                     <button
@@ -93,11 +132,18 @@ const Index: React.FC<Props> = ({posts, get_allPosts, delete_post}) => {
                             }
                         </div>
                         :
-                        <div className="alert alert-primary text-center" role="alert">
-                            No more posts :(
-                        </div>
+                        <Alert variant="primary" className="text-center">
+                            No more posts :(. <Link href="/posts/new"><a>Create a new post</a></Link>
+                        </Alert>
                 }
             </div>
+            <EditPost
+                open={state.open}
+                postId={state.id}
+                handleCloseModal={handleCloseModal}
+                handleEdit={handleEdit}
+                handleChangeFields={handleChangeFields}
+            />
         </Layout>
     )
 };
@@ -124,7 +170,7 @@ const CardOverlay = styled.div.attrs({
         top: 0;
         left: 0;
         right: 0;
-        bottom: 62px;
+        bottom: 63px;
         cursor: pointer;
         span {
             color: #fff;
@@ -142,4 +188,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, {get_allPosts, delete_post})(Index);
+export default connect(mapStateToProps, {get_allPosts, delete_post, put_updatePost})(Index);

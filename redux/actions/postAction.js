@@ -3,6 +3,8 @@ import axios from "axios";
 import {API} from "../../constants";
 import {REMOVE_POST} from "../types";
 
+// GET List all posts
+
 export const get_allPosts = () => async (dispatch) => {
     try {
         const res = await axios.get(API.fetchPosts)
@@ -18,6 +20,8 @@ export const dispatchFetchPosts = (posts) => ({
     type: types.GET_POSTS,
     posts: posts
 });
+
+// GET Retrieve a post
 
 export const get_comments = (id = null) => async (dispatch) => {
     try {
@@ -35,53 +39,49 @@ export const dispatchFetchComments = (post) => ({
     post: post
 });
 
-export const post_createComment = (body = null, postId = null) => async (dispatch) => {
+// POST Create a post
+
+export const post_createPost = (title, body) => async (dispatch) => {
     try {
-        const res = await axios.post(API.fetchPostsComments,
-            {
-                postId: postId,
-                body: body
+        const res = await axios.post(API.fetchPosts,{
+            title: title,
+            body: body
         }).then(res => res.data);
 
-        dispatch(dispatchFetchComment(res));
+        dispatch(dispatchAddPost(res));
     } catch (e) {
         throw new Error("Something went wrong with server");
     }
 };
 
-export const dispatchFetchComment = (comment) => ({
-    type: types.ADD_COMMENT,
-    comment: comment
+export const dispatchAddPost = (addPost) => ({
+    type: types.ADD_POST,
+    addPost: addPost
 });
 
-//
-// export const post_createPost = (state = null) => async (dispatch) => {
-//     try {
-//         const res = await axios.post(API.fetchPosts,{
-//             title: state.title,
-//             body: state.body
-//         }).then(res => res.data);
-//
-//         dispatch(dispatchFetchPosts(res));
-//     } catch (e) {
-//         throw new Error("Something went wrong with server");
-//     }
-// };
-//
-// export const put_updatePost = (state = null) => async (dispatch) => {
-//     try {
-//         const res = await axios.put(`${API.fetchPosts}${state.id}`,
-//             {
-//             title: state.title,
-//             body: state.body
-//         }).then(res => res.data);
-//
-//         dispatch(dispatchFetchPosts(res));
-//     } catch (e) {
-//         throw new Error("Something went wrong with server");
-//     }
-// };
-//
+// PUT Update a post
+
+export const put_updatePost = (id, title, body) => async (dispatch) => {
+    try {
+        const res = await axios.put(`${API.fetchPosts}${id}`,
+            {
+            title: title,
+            body: body
+        }).then(res => res.data);
+
+        dispatch(dispatchEditPost(res));
+    } catch (e) {
+        throw new Error("Something went wrong with server");
+    }
+};
+
+export const dispatchEditPost = (edit) => ({
+    type: types.EDIT_POST,
+    edit: edit
+});
+
+// DEL Delete a post
+
 export const delete_post = (id = null) => async (dispatch) => {
     try {
         await axios.delete(`${API.fetchPosts}${id}`);
@@ -95,4 +95,25 @@ export const delete_post = (id = null) => async (dispatch) => {
 export const dispatchDeletePost = (index) => ({
     type: REMOVE_POST,
     index
+});
+
+// POST Create a comment
+
+export const post_createComment = (body = null, postId = null) => async (dispatch) => {
+    try {
+        const res = await axios.post(API.fetchPostsComments,
+            {
+                postId: postId,
+                body: body
+            }).then(res => res.data);
+
+        dispatch(dispatchFetchComment(res));
+    } catch (e) {
+        throw new Error("Something went wrong with server");
+    }
+};
+
+export const dispatchFetchComment = (comment) => ({
+    type: types.ADD_COMMENT,
+    comment: comment
 });

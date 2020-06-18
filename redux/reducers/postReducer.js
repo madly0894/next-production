@@ -19,6 +19,20 @@ export const postReducer = (state = initialState, action) => {
                 ...state,
                 posts: action.posts
             };
+        case types.ADD_POST:
+            return {
+                ...state,
+                posts: [...state.posts, action.addPost]
+            };
+        case types.EDIT_POST:
+            const editPost = state.posts.map(todo => todo.id === action.edit.id ?
+                { ...todo, ...action.edit } : todo
+            );
+
+            return {
+                ...state,
+                posts: editPost
+            };
         case types.REMOVE_POST:
             const newState = state.posts.filter(val => val.id !== action.index);
 

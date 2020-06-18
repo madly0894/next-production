@@ -1,5 +1,8 @@
 import React, {useState} from "react";
+// Components
 import Link from "next/link";
+import {Nav, Navbar as Header} from "react-bootstrap";
+// Styles
 import styled from "styled-components";
 
 const Navbar: React.FC = () => {
@@ -16,7 +19,7 @@ const Navbar: React.FC = () => {
 
     return (
         <header>
-            <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+            <Header expand="md" bg="dark" variant="dark">
                 <Link href="/">
                     <a className="navbar-brand">Blog</a>
                 </Link>
@@ -29,20 +32,20 @@ const Navbar: React.FC = () => {
                     onClick={(e) => e.stopPropagation()}
                     className="collapse navbar-collapse"
                 >
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
+                    <Nav className="ml-auto">
+                        <Nav.Item>
                             <Link href="/">
-                                <a className="nav-link home-link">Latest Posts</a>
+                                <a className="nav-link">Latest Posts</a>
                             </Link>
-                        </li>
-                        <li className="nav-item">
+                        </Nav.Item>
+                        <Nav.Item>
                             <Link href="/posts/new">
                                 <a className="nav-link">Create Post</a>
                             </Link>
-                        </li>
-                    </ul>
+                        </Nav.Item>
+                    </Nav>
                 </CollapseMenu>
-            </nav>
+            </Header>
         </header>
     );
 };
@@ -86,16 +89,16 @@ const CollapseMenu = styled.div`
         width: 70%;
         left: ${props => props.open ? "0" : "-100%"};
         transition: all .3s;
-        ul {
+        .navbar-nav {
             width: 100%;
             margin-left: 0 !important;
-            li {
+            .nav-item {
                 height: 56px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border-bottom: 1px solid rgba(0, 0, 0, .1);
-                a {
+                .nav-link {
                     text-align: center;
                 }
             }

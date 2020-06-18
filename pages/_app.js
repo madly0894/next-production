@@ -1,10 +1,13 @@
-import * as React from "react";
-import App from "next/app";
+import React from "react";
+// Redux
 import {Provider} from "react-redux";
+// Components
+import App from "next/app";
 import {createWrapper} from "next-redux-wrapper";
 import store from "../redux/store";
-// style
+// Styles
 import "../assets/css/styles.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class MyApp extends App {
     render() {
