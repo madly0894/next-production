@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 // Redux
 import {connect} from "react-redux";
+import {compose} from "redux";
 import {get_allPosts, delete_post, put_updatePost} from "../redux/actions/postAction";
 // Components
 import Layout from '../components/Layout';
@@ -182,10 +183,10 @@ const CardOverlay = styled.div.attrs({
     }
 `;
 
-function mapStateToProps(state) {
+function mapStateToProps(state: any) {
     return {
         posts: state.data.posts
     }
 }
 
-export default connect(mapStateToProps, {get_allPosts, delete_post, put_updatePost})(Index);
+export default compose(connect(mapStateToProps, {get_allPosts, delete_post, put_updatePost}))(Index);

@@ -3,6 +3,7 @@ import React, {useEffect, useState, useRef} from "react";
 import {useRouter} from "next/router";
 // Redux
 import {connect} from "react-redux";
+import {compose} from "redux";
 import {get_comments, post_createComment} from "../../redux/actions/postAction";
 // Components
 import Layout from "../../components/Layout";
@@ -12,7 +13,7 @@ type Props = {
     post: any,
     get_comments(id: number) : void,
     post_createComment(body: string, postId: number) : void
-}
+};
 
 const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
 
@@ -97,10 +98,12 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
     )
 };
 
+PostId.getInitialProps = async () => {return {}};
+
 function mapStateToProps(state) {
     return {
         post: state.data.post
     }
 }
 
-export default connect(mapStateToProps, {get_comments, post_createComment})(PostId);
+export default compose(connect(mapStateToProps, {get_comments, post_createComment}))(PostId);

@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import Router from "next/router";
 // Redux
 import {connect} from "react-redux";
+import {compose} from "redux";
 import {post_createPost} from "../../redux/actions/postAction";
 // Components
 import Layout from "../../components/Layout";
@@ -65,4 +66,4 @@ const CreatePost: React.FC<Props> = ({post_createPost}) => {
     )
 };
 
-export default connect(null, {post_createPost})(CreatePost);
+export default compose(connect(null, {post_createPost}))(CreatePost);

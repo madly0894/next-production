@@ -1,14 +1,18 @@
 import * as types from "../types";
+// Axios
 import axios from "axios";
+// Api
 import {API} from "../../constants";
-import {REMOVE_POST} from "../types";
 
 // GET List all posts
 
 export const get_allPosts = () => async (dispatch) => {
     try {
         const res = await axios.get(API.fetchPosts)
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(err => {
+                console.log(err)
+            });
 
         dispatch(dispatchFetchPosts(res));
     } catch (e) {
@@ -23,10 +27,13 @@ export const dispatchFetchPosts = (posts) => ({
 
 // GET Retrieve a post
 
-export const get_comments = (id = null) => async (dispatch) => {
+export const get_comments = (id: number) => async (dispatch) => {
     try {
         const res = await axios.get(`${API.fetchPosts}${id}?_embed=comments`)
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(err => {
+                console.log(err)
+            });
 
         dispatch(dispatchFetchComments(res));
     } catch (e) {
@@ -41,12 +48,15 @@ export const dispatchFetchComments = (post) => ({
 
 // POST Create a post
 
-export const post_createPost = (title, body) => async (dispatch) => {
+export const post_createPost = (title: string, body: string) => async (dispatch) => {
     try {
         const res = await axios.post(API.fetchPosts,{
             title: title,
             body: body
-        }).then(res => res.data);
+        }).then(res => res.data)
+            .catch(err => {
+                console.log(err)
+            });
 
         dispatch(dispatchAddPost(res));
     } catch (e) {
@@ -61,13 +71,16 @@ export const dispatchAddPost = (addPost) => ({
 
 // PUT Update a post
 
-export const put_updatePost = (id, title, body) => async (dispatch) => {
+export const put_updatePost = (id: number, title: string, body: string) => async (dispatch) => {
     try {
         const res = await axios.put(`${API.fetchPosts}${id}`,
             {
             title: title,
             body: body
-        }).then(res => res.data);
+        }).then(res => res.data)
+            .catch(err => {
+                console.log(err)
+            });
 
         dispatch(dispatchEditPost(res));
     } catch (e) {
@@ -82,9 +95,12 @@ export const dispatchEditPost = (edit) => ({
 
 // DEL Delete a post
 
-export const delete_post = (id = null) => async (dispatch) => {
+export const delete_post = (id: number) => async (dispatch) => {
     try {
-        await axios.delete(`${API.fetchPosts}${id}`);
+        await axios.delete(`${API.fetchPosts}${id}`)
+            .catch(err => {
+                console.log(err)
+            });
 
         dispatch(dispatchDeletePost(id));
     } catch (e) {
@@ -93,19 +109,22 @@ export const delete_post = (id = null) => async (dispatch) => {
 };
 
 export const dispatchDeletePost = (index) => ({
-    type: REMOVE_POST,
+    type: types.REMOVE_POST,
     index
 });
 
 // POST Create a comment
 
-export const post_createComment = (body = null, postId = null) => async (dispatch) => {
+export const post_createComment = (body: string, postId: number) => async (dispatch) => {
     try {
         const res = await axios.post(API.fetchPostsComments,
             {
                 postId: postId,
                 body: body
-            }).then(res => res.data);
+            }).then(res => res.data)
+                .catch(err => {
+                    console.log(err)
+                });
 
         dispatch(dispatchFetchComment(res));
     } catch (e) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 // Redux
 import {Provider} from "react-redux";
 // Components
@@ -9,7 +9,12 @@ import store from "../redux/store";
 import "../assets/css/styles.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-class MyApp extends App {
+type Props = {
+    Component: any,
+    pageProps: any
+}
+
+class MyApp extends Component<Props, App> {
     render() {
 
         const {Component, pageProps} = this.props;

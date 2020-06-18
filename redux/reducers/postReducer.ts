@@ -1,18 +1,11 @@
 import * as types from "../types";
 
-// export type initialStateType = {
-//     posts: Array<number> | Array<string>,
-//     post: object,
-//     loading: boolean,
-//     error: null | boolean
-// };
-
 const initialState = {
     posts: [],
     post: {}
 };
 
-export const postReducer = (state = initialState, action) => {
+export const postReducer = (state: any = initialState, action) => {
     switch (action.type) {
         case types.GET_POSTS:
             return {
