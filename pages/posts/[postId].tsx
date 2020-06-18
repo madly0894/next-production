@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useRef} from "react";
 // Hoc
 import {useRouter} from "next/router";
+// @ts-ignore
+import { NextFunctionComponent } from 'next';
 // Redux
 import {connect} from "react-redux";
 import {compose} from "redux";
@@ -15,7 +17,7 @@ type Props = {
     post_createComment(body: string, postId: number) : void
 };
 
-const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
+const PostId: NextFunctionComponent<Props> = ({post, get_comments, post_createComment}) => {
 
     const router = useRouter();
     const {postId} = router.query;
@@ -98,7 +100,7 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
     )
 };
 
-// PostId.getInitialProps = async () => {return {}};
+PostId.getInitialProps = async ({query}) => {return {query}};
 
 function mapStateToProps(state) {
     return {
