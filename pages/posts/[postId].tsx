@@ -98,7 +98,7 @@ const PostId: React.FC<Props> = ({post, get_comments, post_createComment}) => {
     )
 };
 
-PostId.getInitialProps = async () => {return {}};
+// PostId.getInitialProps = async () => {return {}};
 
 function mapStateToProps(state) {
     return {
