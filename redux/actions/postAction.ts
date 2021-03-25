@@ -71,8 +71,8 @@ export const post_createPost = (title: string, body: string): ThunkType => async
     try {
         const res = await axios
             .post(API.fetchPosts, {
-                title: title,
-                body: body,
+                title,
+                body,
             })
             .then((res) => res.data)
             .catch((err) => {
@@ -102,8 +102,8 @@ export const put_updatePost = (id: number, title: string, body: string): ThunkTy
     try {
         const res = await axios
             .put(`${API.fetchPosts}${id}`, {
-                title: title,
-                body: body,
+                title,
+                body,
             })
             .then((res) => res.data)
             .catch((err) => {
@@ -158,8 +158,8 @@ export const post_createComment = (body: string, postId: number): ThunkType => a
     try {
         const res = await axios
             .post(API.fetchPostsComments, {
-                postId: postId,
-                body: body,
+                postId,
+                body,
             })
             .then((res) => res.data)
             .catch((err) => {
