@@ -128,15 +128,15 @@ const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePo
                                                             <span>Read More</span>
                                                         </CardOverlay>
                                                         <img src="/bg.jpeg" className="card-img-top" alt="..." />
-                                                        <div className="card-body">
-                                                            <h3 className="card-title font-weight-bold text-dark text-capitalize">
-                                                                {p.title}
-                                                            </h3>
-                                                            <p className="card-text text-muted">{p.body}</p>
-                                                        </div>
                                                     </CardBox>
                                                 </a>
                                             </Link>
+                                            <div className="card-body" style={{ height: 200, overflow: 'auto' }} >
+                                                <h3 className="card-title font-weight-bold text-dark text-capitalize">
+                                                    {p.title}
+                                                </h3>
+                                                <p className="card-text text-muted">{p.body}</p>
+                                            </div>
                                             <div className="card-footer">
                                                 <button
                                                     className="btn btn-primary mr-2"
@@ -196,7 +196,7 @@ const CardOverlay = styled.div.attrs({
         top: 0;
         left: 0;
         right: 0;
-        bottom: 63px;
+        bottom: 263px;
         cursor: pointer;
         span {
             color: #fff;
