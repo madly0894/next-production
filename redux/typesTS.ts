@@ -14,6 +14,7 @@ export type Post = {
 export type StateReducer = {
     posts: Post[];
     post: Post;
+    loading: boolean;
 };
 
 export type StateGlobal = {

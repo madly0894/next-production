@@ -13,6 +13,10 @@ import Layout from '../../components/Layout';
 import { Button, Card, ListGroup } from 'react-bootstrap';
 import { Post, Comments } from '../../redux/typesTS';
 
+type PostId = {
+    postId: string;
+};
+
 type Props = {
     post: Post;
     get_comments(id: number): void;
@@ -21,7 +25,7 @@ type Props = {
 
 const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Props): JSX.Element => {
     const router = useRouter();
-    const { postId } = router.query;
+    const { postId }: PostId = router.query;
 
     const [body, setBody] = useState<string>('');
 
@@ -33,7 +37,11 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setBody(event.target.value);
+        const {
+            target: { value },
+        } = event;
+
+        setBody(value);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -66,8 +74,8 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
                                     rows={2}
                                     ref={ref}
                                     value={body}
-                                    onChange={(e) => handleChange(e)}
-                                    onKeyPress={(e) => handleKeyPress(e)}
+                                    onChange={handleChange}
+                                    onKeyPress={handleKeyPress}
                                 />
                                 <div className="text-right mt-3">
                                     <Button size="sm" type="button" onClick={handleCreateComment}>
@@ -79,10 +87,9 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
                         <hr />
                         <h5>Comments</h5>
                         <ListGroup variant="flush">
-                            {post &&
-                                post.comments?.map((c: Comments) => {
-                                    return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
-                                })}
+                            {post?.comments?.map((c: Comments) => {
+                                return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
+                            })}
                         </ListGroup>
                     </Card.Footer>
                 </Card>

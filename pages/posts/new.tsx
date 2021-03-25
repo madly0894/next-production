@@ -18,7 +18,7 @@ type State = {
     body: string;
 };
 
-const CreatePost: React.FC<Props> = ({ post_createPost }: Props) => {
+const CreatePost: React.FC<Props> = ({ post_createPost }: Props): JSX.Element => {
     const [state, setState] = useState<State>({
         title: '',
         body: '',

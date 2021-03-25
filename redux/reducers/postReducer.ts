@@ -9,6 +9,7 @@ const initialState: StateReducer = {
         body: '',
         comments: [],
     },
+    loading: false,
 };
 
 export const postReducer = (state: StateReducer = initialState, action) => {
@@ -17,6 +18,7 @@ export const postReducer = (state: StateReducer = initialState, action) => {
             return {
                 ...state,
                 posts: action.posts,
+                loading: false,
             };
         case types.ADD_POST:
             return {
@@ -43,6 +45,7 @@ export const postReducer = (state: StateReducer = initialState, action) => {
             return {
                 ...state,
                 post: action.post,
+                loading: false,
             };
         case types.ADD_COMMENT:
             return {
@@ -50,7 +53,12 @@ export const postReducer = (state: StateReducer = initialState, action) => {
                 post: {
                     ...state.post,
                     comments: [...state.post.comments, action.comment],
-                },
+                }
+            };
+        case types.SET_LOADING:
+            return {
+                ...state,
+                loading: true,
             };
         default:
             return state;

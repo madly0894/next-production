@@ -3,10 +3,12 @@ import * as types from '../types';
 import axios from 'axios';
 // Api
 import { API } from '../../constants';
+import { ThunkDispatch } from 'redux-thunk';
 
 // GET List all posts
 
-export const get_allPosts = () => async (dispatch) => {
+export const get_allPosts = () => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         const res = await axios
             .get(API.fetchPosts)
@@ -28,7 +30,8 @@ export const dispatchFetchPosts = (posts) => ({
 
 // GET Retrieve a post
 
-export const get_comments = (id: number) => async (dispatch) => {
+export const get_comments = (id: number) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         const res = await axios
             .get(`${API.fetchPosts}${id}?_embed=comments`)
@@ -50,7 +53,8 @@ export const dispatchFetchComments = (post) => ({
 
 // POST Create a post
 
-export const post_createPost = (title: string, body: string) => async (dispatch) => {
+export const post_createPost = (title: string, body: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         const res = await axios
             .post(API.fetchPosts, {
@@ -75,7 +79,8 @@ export const dispatchAddPost = (addPost) => ({
 
 // PUT Update a post
 
-export const put_updatePost = (id: number, title: string, body: string) => async (dispatch) => {
+export const put_updatePost = (id: number, title: string, body: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         const res = await axios
             .put(`${API.fetchPosts}${id}`, {
@@ -100,7 +105,8 @@ export const dispatchEditPost = (edit) => ({
 
 // DEL Delete a post
 
-export const delete_post = (id: number) => async (dispatch) => {
+export const delete_post = (id: number) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         await axios.delete(`${API.fetchPosts}${id}`).catch((err) => {
             console.log(err);
@@ -119,7 +125,8 @@ export const dispatchDeletePost = (index) => ({
 
 // POST Create a comment
 
-export const post_createComment = (body: string, postId: number) => async (dispatch) => {
+export const post_createComment = (body: string, postId: number) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    dispatch(setLoading());
     try {
         const res = await axios
             .post(API.fetchPostsComments, {
@@ -140,4 +147,8 @@ export const post_createComment = (body: string, postId: number) => async (dispa
 export const dispatchFetchComment = (comment) => ({
     type: types.ADD_COMMENT,
     comment: comment,
+});
+
+export const setLoading = () => ({
+    type: types.SET_LOADING,
 });

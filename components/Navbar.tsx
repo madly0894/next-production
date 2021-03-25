@@ -1,12 +1,11 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 // Components
-import Link from "next/link";
-import {Nav, Navbar as Header} from "react-bootstrap";
+import Link from 'next/link';
+import { Nav, Navbar as Header } from 'react-bootstrap';
 // Styles
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const Navbar: React.FC = () => {
-
+const Navbar: React.FC = (): JSX.Element => {
     const [open, setOpen] = useState<boolean>(false);
 
     function onOpen() {
@@ -24,14 +23,10 @@ const Navbar: React.FC = () => {
                     <a className="navbar-brand">Blog</a>
                 </Link>
                 <CollapseButton onClick={onOpen} className="navbar-toggler" type="button">
-                    <span className="navbar-toggler-icon"/>
+                    <span className="navbar-toggler-icon" />
                 </CollapseButton>
-                <CollapseMenuOverlay open={open} onClick={onClose}/>
-                <CollapseMenu
-                    open={open}
-                    onClick={(e) => e.stopPropagation()}
-                    className="collapse navbar-collapse"
-                >
+                <CollapseMenuOverlay open={open} onClick={onClose} />
+                <CollapseMenu open={open} onClick={(e) => e.stopPropagation()} className="collapse navbar-collapse">
                     <Nav className="ml-auto">
                         <Nav.Item>
                             <Link href="/">
@@ -61,9 +56,9 @@ const CollapseMenuOverlay = styled.div`
     opacity: 0;
     visibility: hidden;
     @media (max-width: 768px) {
-        visibility: ${props => props.open ? "visible" : "hidden"};
-        opacity: ${props => props.open ? "1" : 0};
-        transition: all .3s;
+        visibility: ${(props) => (props.open ? 'visible' : 'hidden')};
+        opacity: ${(props) => (props.open ? '1' : 0)};
+        transition: all 0.3s;
         position: fixed;
         height: 100%;
         width: 100%;
@@ -71,7 +66,7 @@ const CollapseMenuOverlay = styled.div`
         right: 0;
         top: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, .5);
+        background-color: rgba(0, 0, 0, 0.5);
         z-index: 999;
     }
 `;
@@ -87,8 +82,8 @@ const CollapseMenu = styled.div`
         z-index: 9999;
         background-color: #343a40;
         width: 70%;
-        left: ${props => props.open ? "0" : "-100%"};
-        transition: all .3s;
+        left: ${(props) => (props.open ? '0' : '-100%')};
+        transition: all 0.3s;
         .navbar-nav {
             width: 100%;
             margin-left: 0 !important;
@@ -97,7 +92,7 @@ const CollapseMenu = styled.div`
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-bottom: 1px solid rgba(0, 0, 0, .1);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
                 .nav-link {
                     text-align: center;
                 }

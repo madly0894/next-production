@@ -29,7 +29,7 @@ type State = {
     isHovered: number | string | null;
 };
 
-const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePost }: Props) => {
+const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePost }: Props): JSX.Element => {
     const [state, setState] = useState<State>({
         isHovered: null,
         open: false,
