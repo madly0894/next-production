@@ -1,33 +1,28 @@
-import React from "react";
+import React from 'react';
 // Components
-import {Button, Modal, Container, Form} from "react-bootstrap";
+import { Button, Modal, Container, Form } from 'react-bootstrap';
 
 type Props = {
-    open: boolean,
-    postId: number,
-    handleCloseModal() : void,
-    handleEdit() : void,
-    handleChangeFields(val: React.ChangeEvent<any>, key: string) : void
-}
+    open: boolean;
+    postId: number | string;
+    handleCloseModal(): void;
+    handleEdit(): void;
+    handleChangeInput(e: React.ChangeEvent<HTMLInputElement>): void;
+    handleChangeTextArea(e: React.ChangeEvent<HTMLTextAreaElement>): void;
+};
 
-const EditPost: React.FC<Props> = ({postId, open, handleCloseModal, handleEdit, handleChangeFields}) => {
-
-    function handleChangeField(e: React.ChangeEvent<any>, key: string) {
-        handleChangeFields(e.target.value, key);
-    }
-
+const EditPost: React.FC<Props> = ({
+    postId,
+    open,
+    handleCloseModal,
+    handleEdit,
+    handleChangeInput,
+    handleChangeTextArea,
+}: Props) => {
     return (
-        <Modal
-            show={open}
-            onHide={handleCloseModal}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+        <Modal show={open} onHide={handleCloseModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Edit Post: {postId}
-                </Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">Edit Post: {postId}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Modal.Body className="show-grid">
@@ -35,11 +30,7 @@ const EditPost: React.FC<Props> = ({postId, open, handleCloseModal, handleEdit, 
                         <Form>
                             <Form.Group controlId="formBasicTitle">
                                 <Form.Label>Title</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    placeholder="Title"
-                                    onChange={(e) => handleChangeField(e, "title")}
-                                />
+                                <Form.Control type="email" placeholder="Title" onChange={handleChangeInput} />
                             </Form.Group>
                             <Form.Group controlId="formBasicBody">
                                 <Form.Label>Body</Form.Label>
@@ -47,7 +38,7 @@ const EditPost: React.FC<Props> = ({postId, open, handleCloseModal, handleEdit, 
                                     as="textarea"
                                     rows={4}
                                     placeholder="Body"
-                                    onChange={(e) => handleChangeField(e, "body")}
+                                    onChange={handleChangeTextArea}
                                 />
                             </Form.Group>
                         </Form>
@@ -55,8 +46,12 @@ const EditPost: React.FC<Props> = ({postId, open, handleCloseModal, handleEdit, 
                 </Modal.Body>
             </Modal.Body>
             <Modal.Footer>
-                <Button type="button" className="btn-secondary" onClick={handleCloseModal}>Close</Button>
-                <Button type="button" onClick={handleEdit}>Edit</Button>
+                <Button type="button" className="btn-secondary" onClick={handleCloseModal}>
+                    Close
+                </Button>
+                <Button type="button" onClick={handleEdit}>
+                    Edit
+                </Button>
             </Modal.Footer>
         </Modal>
     );

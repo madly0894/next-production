@@ -1,34 +1,53 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 // HOC
-import Router from "next/router";
+import Router from 'next/router';
 // Redux
-import {connect} from "react-redux";
-import {compose} from "redux";
-import {post_createPost} from "../../redux/actions/postAction";
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { post_createPost } from '../../redux/actions/postAction';
 // Components
-import Layout from "../../components/Layout";
-import {Button, Form, Jumbotron} from "react-bootstrap";
+import Layout from '../../components/Layout';
+import { Button, Form, Jumbotron } from 'react-bootstrap';
 
 type Props = {
-    post_createPost(title: string, body: string) : void
-}
+    post_createPost(title: string, body: string): void;
+};
 
-const CreatePost: React.FC<Props> = ({post_createPost}) => {
+type State = {
+    title: string;
+    body: string;
+};
 
-    const [state, setState] = useState<any>({
-        title: "",
-        body: ""
+const CreatePost: React.FC<Props> = ({ post_createPost }: Props) => {
+    const [state, setState] = useState<State>({
+        title: '',
+        body: '',
     });
 
     const handleCreatePost = () => {
         post_createPost(state.title, state.body);
-        Router.push("/");
+        Router.push('/');
     };
 
-    const handleChangeField = (e: React.ChangeEvent<any>, key: string) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {
+            target: { value },
+        } = e;
+
         setState({
             ...state,
-            [key]: e.target.value
+            title: value,
+        });
+    };
+
+    const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const {
+            target: { value },
+        } = e;
+
+        setState({
+            ...state,
+            body: value,
         });
     };
 
@@ -43,7 +62,7 @@ const CreatePost: React.FC<Props> = ({post_createPost}) => {
                                 value={state.title}
                                 type="email"
                                 placeholder="Title"
-                                onChange={(e) => handleChangeField(e, "title")}
+                                onChange={handleChangeInput}
                             />
                         </Form.Group>
                         <Form.Group controlId="formBasicBody">
@@ -53,17 +72,19 @@ const CreatePost: React.FC<Props> = ({post_createPost}) => {
                                 value={state.body}
                                 rows={5}
                                 placeholder="Body"
-                                onChange={(e) => handleChangeField(e, "body")}
+                                onChange={handleChangeTextArea}
                             />
                         </Form.Group>
                         <Form.Group>
-                            <Button type="button" onClick={handleCreatePost}>Create a new post</Button>
+                            <Button type="button" onClick={handleCreatePost}>
+                                Create a new post
+                            </Button>
                         </Form.Group>
                     </Form>
                 </Jumbotron>
             </div>
         </Layout>
-    )
+    );
 };
 
-export default compose(connect(null, {post_createPost}))(CreatePost);
+export default compose(connect(null, { post_createPost }))(CreatePost);

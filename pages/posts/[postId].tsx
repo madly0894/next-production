@@ -1,34 +1,35 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from 'react';
 // Hoc
-import {useRouter} from "next/router";
 // @ts-ignore
-import { NextFunctionComponent } from 'next';
+import { useRouter } from 'next/router';
+// @ts-ignore
+import { NextPage } from 'next';
 // Redux
-import {connect} from "react-redux";
-import {compose} from "redux";
-import {get_comments, post_createComment} from "../../redux/actions/postAction";
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { get_comments, post_createComment } from '../../redux/actions/postAction';
 // Components
-import Layout from "../../components/Layout";
-import {Button, Card, ListGroup} from "react-bootstrap";
+import Layout from '../../components/Layout';
+import { Button, Card, ListGroup } from 'react-bootstrap';
+import { Post, Comments } from '../../redux/typesTS';
 
 type Props = {
-    post: any,
-    get_comments(id: number) : void,
-    post_createComment(body: string, postId: number) : void
+    post: Post;
+    get_comments(id: number): void;
+    post_createComment(body: string, postId: number): void;
 };
 
-const PostId: NextFunctionComponent<Props> = ({post, get_comments, post_createComment}) => {
-
+const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Props): JSX.Element => {
     const router = useRouter();
-    const {postId} = router.query;
+    const { postId } = router.query;
 
-    const [body, setBody] = useState<string>("");
+    const [body, setBody] = useState<string>('');
 
     const ref = useRef<HTMLTextAreaElement>(null);
 
     const handleCreateComment = () => {
-        post_createComment(body, Number(postId));
-        setBody("");
+        post_createComment(body, +postId);
+        setBody('');
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,16 +37,16 @@ const PostId: NextFunctionComponent<Props> = ({post, get_comments, post_createCo
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
-            post_createComment(body, Number(postId));
-            ref.current!.blur();
-            setBody("");
+        if (e.key === 'Enter') {
+            post_createComment(body, +postId);
+            ref.current?.blur();
+            setBody('');
         }
     };
 
     useEffect(() => {
-        get_comments(Number(postId));
-    }, []);
+        get_comments(+postId);
+    }, [postId]);
 
     return (
         <Layout title={`Post: ${postId}`}>
@@ -53,8 +54,8 @@ const PostId: NextFunctionComponent<Props> = ({post, get_comments, post_createCo
                 <Card className="card mx-auto">
                     <Card.Img variant="top" src="/bg.jpeg" />
                     <Card.Body className="text-center">
-                        <Card.Title className="font-weight-bold text-capitalize">{post && post.title}</Card.Title>
-                        <Card.Text className="text-muted">{post && post.body}</Card.Text>
+                        <Card.Title className="font-weight-bold text-capitalize">{post?.title}</Card.Title>
+                        <Card.Text className="text-muted">{post?.body}</Card.Text>
                     </Card.Body>
                     <Card.Footer>
                         <div className="panel mt-3">
@@ -65,47 +66,39 @@ const PostId: NextFunctionComponent<Props> = ({post, get_comments, post_createCo
                                     rows={2}
                                     ref={ref}
                                     value={body}
-                                    onChange={e => handleChange(e)}
-                                    onKeyPress={e => handleKeyPress(e)}
+                                    onChange={(e) => handleChange(e)}
+                                    onKeyPress={(e) => handleKeyPress(e)}
                                 />
                                 <div className="text-right mt-3">
-                                    <Button
-                                        size="sm"
-                                        type="button"
-                                        onClick={handleCreateComment}
-                                    >
+                                    <Button size="sm" type="button" onClick={handleCreateComment}>
                                         Share
                                     </Button>
                                 </div>
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <h5>Comments</h5>
                         <ListGroup variant="flush">
-                            {
-                                post && post.comments && post.comments.map(c => {
-                                    return (
-                                        <ListGroup.Item key={c.id}>
-                                            {c && c.body}
-                                        </ListGroup.Item>
-                                    );
-                                })
-                            }
+                            {post &&
+                                post.comments?.map((c: Comments) => {
+                                    return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
+                                })}
                         </ListGroup>
                     </Card.Footer>
                 </Card>
-
             </div>
         </Layout>
-    )
+    );
 };
 
-PostId.getInitialProps = async ({query}) => {return {query}};
+PostId.getInitialProps = async ({ query }) => {
+    return { query };
+};
 
 function mapStateToProps(state) {
     return {
-        post: state.data.post
-    }
+        post: state.data.post,
+    };
 }
 
-export default compose(connect(mapStateToProps, {get_comments, post_createComment}))(PostId);
+export default compose(connect(mapStateToProps, { get_comments, post_createComment }))(PostId);

@@ -1,85 +1,109 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 // Redux
-import {connect} from "react-redux";
-import {compose} from "redux";
-import {get_allPosts, delete_post, put_updatePost} from "../redux/actions/postAction";
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { get_allPosts, delete_post, put_updatePost } from '../redux/actions/postAction';
 // Components
 import Layout from '../components/Layout';
-import EditPost from "../components/EditPost";
-import Link from "next/link";
-import {Alert} from "react-bootstrap";
+import EditPost from '../components/EditPost';
+import Link from 'next/link';
+import { Alert } from 'react-bootstrap';
 // Styles
-import styled from "styled-components";
+import styled from 'styled-components';
+import { Post, StateGlobal } from '../redux/typesTS';
 
-declare var confirm: (question: string) => boolean;
+declare let confirm: (question: string) => boolean;
 
 type Props = {
-    posts: any
-    get_allPosts() : void,
-    delete_post(id: number) : void,
-    put_updatePost(id: number, title: string, body: string) : void
-}
+    posts: Post[];
+    get_allPosts(): void;
+    delete_post(id: number | string): void;
+    put_updatePost(id: number | string, title: string, body: string): void;
+};
 
-const Index: React.FC<Props> = ({posts, get_allPosts, delete_post, put_updatePost}) => {
+type State = {
+    open: boolean;
+    id: number | string;
+    title: string;
+    body: string;
+    isHovered: number | string | null;
+};
 
-    const [state, setState] = useState<any>({
-        isHovered: {},
+const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePost }: Props) => {
+    const [state, setState] = useState<State>({
+        isHovered: null,
         open: false,
-        id: "",
-        title: "",
-        body: ""
+        id: '',
+        title: '',
+        body: '',
     });
 
     useEffect(() => {
         get_allPosts();
     }, []);
 
-    function handleMouseEnter(id: number) {
-        setState({
-            isHovered: { [id]: true }
-        });
+    function handleMouseEnter(id: number | string) {
+        setState((prevState: State) => ({
+            ...prevState,
+            isHovered: id,
+        }));
     }
 
-    function handleMouseLeave(id: number) {
-        setState( {
-            ...state,
-            isHovered: { [id]: false }
-        });
+    function handleMouseLeave() {
+        setState((prevState) => ({
+            ...prevState,
+            isHovered: null,
+        }));
     }
 
-    const handleOpenModal = (id: number) => {
+    const handleOpenModal = (id: number | string) => {
         setState({
             ...state,
             open: true,
-            id: id
+            id: id,
         });
     };
 
     const handleCloseModal = () => {
         setState({
             ...state,
-            open: false
+            open: false,
         });
     };
 
-    const handleChangeFields = (val: React.ChangeEvent<any>, key: string) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {
+            target: { value },
+        } = e;
+
         setState({
             ...state,
-            [key]: val
+            title: value,
+        });
+    };
+
+    const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const {
+            target: { value },
+        } = e;
+
+        setState({
+            ...state,
+            body: value,
         });
     };
 
     const handleEdit = () => {
         setState({
             ...state,
-            open: false
+            open: false,
         });
         put_updatePost(state.id, state.title, state.body);
     };
 
-    function handleDelete(id: number) {
+    function handleDelete(id: number | string) {
         const shouldRemove = confirm(`Are you sure delete post: ${id}?`);
-        if(shouldRemove) {
+        if (shouldRemove) {
             delete_post(id);
         }
     }
@@ -87,70 +111,71 @@ const Index: React.FC<Props> = ({posts, get_allPosts, delete_post, put_updatePos
     return (
         <Layout title="Latest Posts">
             <div className="container">
-                {
-                    posts.length ?
-                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                            {
-                                posts && posts.map(p => {
-                                    return (
-                                        <div className="col mb-4" key={p.id}>
-                                            <div className="card">
-                                                <Link href="/posts/[postId]" as={`/posts/${p.id}`}>
-                                                    <a className="text-decoration-none">
-                                                        <CardBox
-                                                            onMouseEnter={() => handleMouseEnter(p.id)}
-                                                            onMouseLeave={() => handleMouseLeave(p.id)}
-                                                        >
-                                                            <CardOverlay isHovered={state.isHovered[p.id]}>
-                                                                <span>Read More</span>
-                                                            </CardOverlay>
-                                                            <img src="/bg.jpeg" className="card-img-top" alt="..." />
-                                                            <div className="card-body">
-                                                                <h3 className="card-title font-weight-bold text-dark text-capitalize">{p.title}</h3>
-                                                                <p className="card-text text-muted">{p.body}</p>
-                                                            </div>
-                                                        </CardBox>
-                                                    </a>
-                                                </Link>
-                                                <div className="card-footer">
-                                                    <button
-                                                        className="btn btn-primary mr-2"
-                                                        onClick={() => handleOpenModal(p.id)}
+                {posts.length ? (
+                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                        {posts &&
+                            posts.map((p: Post) => {
+                                return (
+                                    <div className="col mb-4" key={p.id}>
+                                        <div className="card">
+                                            <Link href="/posts/[postId]" as={`/posts/${p.id}`}>
+                                                <a className="text-decoration-none">
+                                                    <CardBox
+                                                        onMouseEnter={() => handleMouseEnter(p.id)}
+                                                        onMouseLeave={handleMouseLeave}
                                                     >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-danger"
-                                                        onClick={() => handleDelete(p.id)}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
+                                                        <CardOverlay isHovered={state.isHovered === p.id}>
+                                                            <span>Read More</span>
+                                                        </CardOverlay>
+                                                        <img src="/bg.jpeg" className="card-img-top" alt="..." />
+                                                        <div className="card-body">
+                                                            <h3 className="card-title font-weight-bold text-dark text-capitalize">
+                                                                {p.title}
+                                                            </h3>
+                                                            <p className="card-text text-muted">{p.body}</p>
+                                                        </div>
+                                                    </CardBox>
+                                                </a>
+                                            </Link>
+                                            <div className="card-footer">
+                                                <button
+                                                    className="btn btn-primary mr-2"
+                                                    onClick={() => handleOpenModal(p.id)}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button className="btn btn-danger" onClick={() => handleDelete(p.id)}>
+                                                    Delete
+                                                </button>
                                             </div>
                                         </div>
-                                    );
-                                })
-                            }
-                        </div>
-                        :
-                        <Alert variant="primary" className="text-center">
-                            No more posts :(. <Link href="/posts/new"><a>Create a new post</a></Link>
-                        </Alert>
-                }
+                                    </div>
+                                );
+                            })}
+                    </div>
+                ) : (
+                    <Alert variant="primary" className="text-center">
+                        No more posts :(.{' '}
+                        <Link href="/posts/new">
+                            <a>Create a new post</a>
+                        </Link>
+                    </Alert>
+                )}
             </div>
             <EditPost
                 open={state.open}
                 postId={state.id}
                 handleCloseModal={handleCloseModal}
                 handleEdit={handleEdit}
-                handleChangeFields={handleChangeFields}
+                handleChangeInput={handleChangeInput}
+                handleChangeTextArea={handleChangeTextArea}
             />
         </Layout>
-    )
+    );
 };
 
 const CardBox = styled.div.attrs({
-    className: "app-card-box"
+    className: 'app-card-box',
 })`
     &.app-card {
         position: relative;
@@ -158,16 +183,16 @@ const CardBox = styled.div.attrs({
 `;
 
 const CardOverlay = styled.div.attrs({
-    className: "app-card-overlay"
+    className: 'app-card-overlay',
 })`
     &.app-card-overlay {
         display: flex;
         justify-content: center;
         align-items: center;
         position: absolute;
-        opacity: ${props => props.isHovered ? 1 : 0};
-        background: ${props => props.isHovered ? "rgba(0, 0, 0, .5)" : "none"};
-        transition: all .3s;
+        opacity: ${(props) => (props.isHovered ? 1 : 0)};
+        background: ${(props) => (props.isHovered ? 'rgba(0, 0, 0, .5)' : 'none')};
+        transition: all 0.3s;
         top: 0;
         left: 0;
         right: 0;
@@ -176,17 +201,17 @@ const CardOverlay = styled.div.attrs({
         span {
             color: #fff;
             padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, .5);
-            background-color: rgba(0, 0, 0, .5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
         }
     }
 `;
 
-function mapStateToProps(state: any) {
+function mapStateToProps({ data }: StateGlobal) {
     return {
-        posts: state.data.posts
-    }
+        posts: data.posts,
+    };
 }
 
-export default compose(connect(mapStateToProps, {get_allPosts, delete_post, put_updatePost}))(Index);
+export default compose(connect(mapStateToProps, { get_allPosts, delete_post, put_updatePost }))(Index);
