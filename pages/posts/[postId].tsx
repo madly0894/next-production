@@ -11,11 +11,7 @@ import { get_comments, post_createComment } from '../../redux/actions/postAction
 // Components
 import Layout from '../../components/Layout';
 import { Button, Card, ListGroup } from 'react-bootstrap';
-import {Post, StateGlobal} from '../../redux/typesTS';
-
-type PostId = {
-    postId: string;
-};
+import { Post } from '../../redux/typesTS';
 
 type Props = {
     post: Post;
@@ -25,14 +21,14 @@ type Props = {
 
 const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Props): JSX.Element => {
     const router = useRouter();
-    const { postId }: PostId = router.query;
+    const { postId } = router.query;
 
     const [body, setBody] = useState<string>('');
 
     const ref = useRef<HTMLTextAreaElement>(null);
 
     const handleCreateComment = () => {
-        post_createComment(body, +postId);
+        post_createComment(body, Number(postId));
         setBody('');
     };
 
@@ -46,14 +42,14 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            post_createComment(body, +postId);
+            post_createComment(body, Number(postId));
             ref.current?.blur();
             setBody('');
         }
     };
 
     useEffect(() => {
-        get_comments(+postId);
+        get_comments(Number(postId));
     }, [postId]);
 
     return (
@@ -102,9 +98,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return { props: { query } };
 };
 
-function mapStateToProps({ data }: StateGlobal) {
+function mapStateToProps(state) {
     return {
-        post: data.post,
+        post: state.data.post,
     };
 }
 
