@@ -12,7 +12,7 @@ const initialState: StateReducer = {
     loading: false,
 };
 
-export const postReducer = (state: StateReducer = initialState, action) => {
+export const postReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case types.GET_POSTS:
             return {
