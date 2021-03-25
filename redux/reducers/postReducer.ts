@@ -24,6 +24,7 @@ export const postReducer = (state = initialState, action: any): StateReducer => 
             return {
                 ...state,
                 posts: [...state.posts, action.addPost],
+                loading: false,
             };
         case types.EDIT_POST:
             const editPost = state.posts.map((todo) =>
@@ -33,6 +34,7 @@ export const postReducer = (state = initialState, action: any): StateReducer => 
             return {
                 ...state,
                 posts: editPost,
+                loading: false,
             };
         case types.REMOVE_POST:
             const newState = state.posts.filter((val) => val.id !== action.index);
@@ -40,6 +42,7 @@ export const postReducer = (state = initialState, action: any): StateReducer => 
             return {
                 ...state,
                 posts: newState,
+                loading: false,
             };
         case types.GET_COMMENTS:
             return {
@@ -54,6 +57,7 @@ export const postReducer = (state = initialState, action: any): StateReducer => 
                     ...state.post,
                     comments: [...state.post.comments, action.comment],
                 },
+                loading: false,
             };
         case types.SET_LOADING:
             return {

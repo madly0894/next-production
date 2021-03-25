@@ -11,15 +11,17 @@ import { get_comments, post_createComment } from '../../redux/actions/postAction
 // Components
 import Layout from '../../components/Layout';
 import { Button, Card, ListGroup } from 'react-bootstrap';
-import { Post } from '../../redux/typesTS';
+import { Post, StateGlobal } from '../../redux/typesTS';
+import Loading from '../../components/Loading';
 
 type Props = {
     post: Post;
+    loading: boolean;
     get_comments(id: number): void;
     post_createComment(body: string, postId: number): void;
 };
 
-const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Props): JSX.Element => {
+const PostId: NextPage<Props> = ({ post, loading, get_comments, post_createComment }: Props): JSX.Element => {
     const router = useRouter();
     const { postId } = router.query;
 
@@ -55,40 +57,44 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
     return (
         <Layout title={`Post: ${postId}`}>
             <div className="container">
-                <Card className="card mx-auto">
-                    <Card.Img variant="top" src="/bg.jpeg" />
-                    <Card.Body className="text-center">
-                        <Card.Title className="font-weight-bold text-capitalize">{post?.title}</Card.Title>
-                        <Card.Text className="text-muted">{post?.body}</Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
-                        <div className="panel mt-3">
-                            <div className="panel-body">
-                                <textarea
-                                    className="form-control"
-                                    placeholder="What are you thinking?"
-                                    rows={2}
-                                    ref={ref}
-                                    value={body}
-                                    onChange={handleChange}
-                                    onKeyPress={handleKeyPress}
-                                />
-                                <div className="text-right mt-3">
-                                    <Button size="sm" type="button" onClick={handleCreateComment}>
-                                        Share
-                                    </Button>
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <Card className="card mx-auto">
+                        <Card.Img variant="top" src="/bg.jpeg" />
+                        <Card.Body className="text-center">
+                            <Card.Title className="font-weight-bold text-capitalize">{post?.title}</Card.Title>
+                            <Card.Text className="text-muted">{post?.body}</Card.Text>
+                        </Card.Body>
+                        <Card.Footer>
+                            <div className="panel mt-3">
+                                <div className="panel-body">
+                                    <textarea
+                                        className="form-control"
+                                        placeholder="What are you thinking?"
+                                        rows={2}
+                                        ref={ref}
+                                        value={body}
+                                        onChange={handleChange}
+                                        onKeyPress={handleKeyPress}
+                                    />
+                                    <div className="text-right mt-3">
+                                        <Button size="sm" type="button" onClick={handleCreateComment}>
+                                            Share
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
-                        <h5>Comments</h5>
-                        <ListGroup variant="flush">
-                            {post?.comments?.map((c) => {
-                                return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
-                            })}
-                        </ListGroup>
-                    </Card.Footer>
-                </Card>
+                            <hr />
+                            <h5>Comments</h5>
+                            <ListGroup variant="flush">
+                                {post?.comments?.map((c) => {
+                                    return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
+                                })}
+                            </ListGroup>
+                        </Card.Footer>
+                    </Card>
+                )}
             </div>
         </Layout>
     );
@@ -98,9 +104,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return { props: { query } };
 };
 
-function mapStateToProps(state) {
+function mapStateToProps({ data }: StateGlobal) {
     return {
-        post: state.data.post,
+        post: data.post,
+        loading: data.loading,
     };
 }
 

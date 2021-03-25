@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Nav, Navbar as Header } from 'react-bootstrap';
 // Styles
 import styled from 'styled-components';
+import ActiveLink from './ActiveLink';
 
 const Navbar: React.FC = (): JSX.Element => {
     const [open, setOpen] = useState<boolean>(false);
@@ -29,14 +30,14 @@ const Navbar: React.FC = (): JSX.Element => {
                 <CollapseMenu open={open} onClick={(e) => e.stopPropagation()} className="collapse navbar-collapse">
                     <Nav className="ml-auto">
                         <Nav.Item>
-                            <Link href="/">
+                            <ActiveLink activeClassName="active" href="/">
                                 <a className="nav-link">Latest Posts</a>
-                            </Link>
+                            </ActiveLink>
                         </Nav.Item>
                         <Nav.Item>
-                            <Link href="/posts/new">
+                            <ActiveLink activeClassName="active" href="/posts/new">
                                 <a className="nav-link">Create Post</a>
-                            </Link>
+                            </ActiveLink>
                         </Nav.Item>
                     </Nav>
                 </CollapseMenu>

@@ -11,11 +11,13 @@ import { Alert } from 'react-bootstrap';
 // Styles
 import styled from 'styled-components';
 import { Post, StateGlobal } from '../redux/typesTS';
+import Loading from '../components/Loading';
 
 declare let confirm: (question: string) => boolean;
 
 type Props = {
     posts: Post[];
+    loading: boolean;
     get_allPosts(): void;
     delete_post(id: number | string): void;
     put_updatePost(id: number | string, title: string, body: string): void;
@@ -29,7 +31,7 @@ type State = {
     isHovered: number | string | null;
 };
 
-const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePost }: Props): JSX.Element => {
+const Index: React.FC<Props> = ({ posts, loading, get_allPosts, delete_post, put_updatePost }: Props): JSX.Element => {
     const [state, setState] = useState<State>({
         isHovered: null,
         open: false,
@@ -108,58 +110,67 @@ const Index: React.FC<Props> = ({ posts, get_allPosts, delete_post, put_updatePo
         }
     }
 
+    useEffect(() => {
+        if (loading) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [loading]);
+
     return (
         <Layout title="Latest Posts">
             <div className="container">
-                {posts.length ? (
-                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                        {posts &&
-                            posts.map((p: Post) => {
-                                return (
-                                    <div className="col mb-4" key={p.id}>
-                                        <div className="card">
-                                            <Link href="/posts/[postId]" as={`/posts/${p.id}`}>
-                                                <a className="text-decoration-none">
-                                                    <CardBox
-                                                        onMouseEnter={() => handleMouseEnter(p.id)}
-                                                        onMouseLeave={handleMouseLeave}
-                                                    >
-                                                        <CardOverlay isHovered={state.isHovered === p.id}>
-                                                            <span>Read More</span>
-                                                        </CardOverlay>
-                                                        <img src="/bg.jpeg" className="card-img-top" alt="..." />
-                                                    </CardBox>
-                                                </a>
-                                            </Link>
-                                            <div className="card-body" style={{ height: 200, overflow: 'auto' }} >
-                                                <h3 className="card-title font-weight-bold text-dark text-capitalize">
-                                                    {p.title}
-                                                </h3>
-                                                <p className="card-text text-muted">{p.body}</p>
-                                            </div>
-                                            <div className="card-footer">
-                                                <button
-                                                    className="btn btn-primary mr-2"
-                                                    onClick={() => handleOpenModal(p.id)}
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button className="btn btn-danger" onClick={() => handleDelete(p.id)}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                    </div>
-                ) : (
+                {loading && <Loading />}
+
+                {!loading && posts.length === 0 ? (
                     <Alert variant="primary" className="text-center">
                         No more posts :(.{' '}
                         <Link href="/posts/new">
                             <a>Create a new post</a>
                         </Link>
                     </Alert>
+                ) : (
+                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                        {posts?.map((p) => {
+                            return (
+                                <div className="col mb-4" key={p.id}>
+                                    <div className="card">
+                                        <Link href="/posts/[postId]" as={`/posts/${p.id}`}>
+                                            <a className="text-decoration-none">
+                                                <CardBox
+                                                    onMouseEnter={() => handleMouseEnter(p.id)}
+                                                    onMouseLeave={handleMouseLeave}
+                                                >
+                                                    <CardOverlay isHovered={state.isHovered === p.id}>
+                                                        <span>Read More</span>
+                                                    </CardOverlay>
+                                                    <img src="/bg.jpeg" className="card-img-top" alt="..." />
+                                                </CardBox>
+                                            </a>
+                                        </Link>
+                                        <div className="card-body" style={{ height: 200, overflow: 'auto' }}>
+                                            <h3 className="card-title font-weight-bold text-dark text-capitalize">
+                                                {p.title}
+                                            </h3>
+                                            <p className="card-text text-muted">{p.body}</p>
+                                        </div>
+                                        <div className="card-footer">
+                                            <button
+                                                className="btn btn-primary mr-2"
+                                                onClick={() => handleOpenModal(p.id)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button className="btn btn-danger" onClick={() => handleDelete(p.id)}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 )}
             </div>
             <EditPost
@@ -211,6 +222,7 @@ const CardOverlay = styled.div.attrs({
 function mapStateToProps({ data }: StateGlobal) {
     return {
         posts: data.posts,
+        loading: data.loading,
     };
 }
 
