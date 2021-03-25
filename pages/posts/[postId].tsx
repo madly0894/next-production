@@ -11,7 +11,7 @@ import { get_comments, post_createComment } from '../../redux/actions/postAction
 // Components
 import Layout from '../../components/Layout';
 import { Button, Card, ListGroup } from 'react-bootstrap';
-import { Post } from '../../redux/typesTS';
+import {Post, StateGlobal} from '../../redux/typesTS';
 
 type PostId = {
     postId: string;
@@ -102,9 +102,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     return { props: { query } };
 };
 
-function mapStateToProps(state) {
+function mapStateToProps({ data }: StateGlobal) {
     return {
-        post: state.data.post,
+        post: data.post,
     };
 }
 
