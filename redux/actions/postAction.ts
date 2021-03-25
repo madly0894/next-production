@@ -147,7 +147,7 @@ export const post_createComment = (body: string, postId: number): ThunkType => a
 };
 
 export const dispatchFetchComment = (comment) => ({
-    type: typeof types.ADD_COMMENT,
+    type: types.ADD_COMMENT,
     comment: comment,
 });
 
