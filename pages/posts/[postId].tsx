@@ -80,7 +80,7 @@ const PostId: NextPage<Props> = ({ post, loading, get_comments, post_createComme
                                         required
                                     />
                                     <div className="text-right mt-3">
-                                        <Button size="sm" type="button" onClick={handleCreateComment}>
+                                        <Button size="sm" type="button" onClick={handleCreateComment} disabled={!body}>
                                             Share
                                         </Button>
                                     </div>

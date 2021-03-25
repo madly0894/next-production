@@ -42,7 +42,7 @@ export const get_comments = (id: number): ThunkType => async (dispatch) => {
     dispatch(setLoading());
     try {
         const res = await axios
-            .get(`${API.fetchPosts}${id}?_embed=comments`)
+            .get(`${API.fetchPosts}/${id}?_embed=comments`)
             .then((res) => res.data)
             .catch((err) => {
                 console.log(err);
@@ -67,7 +67,6 @@ export const dispatchFetchComments = (post: Post): GetComments => ({
 // POST Create a post
 
 export const post_createPost = (title: string, body: string): ThunkType => async (dispatch) => {
-    dispatch(setLoading());
     try {
         const res = await axios
             .post(API.fetchPosts, {
@@ -101,7 +100,7 @@ export const put_updatePost = (id: number, title: string, body: string): ThunkTy
     dispatch(setLoading());
     try {
         const res = await axios
-            .put(`${API.fetchPosts}${id}`, {
+            .put(`${API.fetchPosts}/${id}`, {
                 title,
                 body,
             })
@@ -131,7 +130,7 @@ export const dispatchEditPost = (edit: UpdatePost): EditPost => ({
 export const delete_post = (id: number): ThunkType => async (dispatch) => {
     dispatch(setLoading());
     try {
-        await axios.delete(`${API.fetchPosts}${id}`).catch((err) => {
+        await axios.delete(`${API.fetchPosts}/${id}`).catch((err) => {
             console.log(err);
         });
 

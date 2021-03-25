@@ -120,11 +120,14 @@ const Index: React.FC<Props> = ({ posts, loading, get_allPosts, delete_post, put
 
     return (
         <Layout title="Latest Posts">
-            <div className="container">
+            <div
+                className={['container', posts.length === 0 && 'd-flex align-items-center justify-content-center'].join(' ')}
+                style={{ height: '100%' }}
+            >
                 {loading && <Loading />}
 
                 {!loading && posts.length === 0 ? (
-                    <Alert variant="primary" className="text-center">
+                    <Alert variant="primary" className="text-center mb-0">
                         No more posts :(.{' '}
                         <Link href="/posts/new">
                             <a>Create a new post</a>

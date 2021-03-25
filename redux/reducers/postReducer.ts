@@ -24,7 +24,6 @@ export const postReducer = (state = initialState, action: any): StateReducer => 
             return {
                 ...state,
                 posts: [...state.posts, action.addPost],
-                loading: false,
             };
         case types.EDIT_POST:
             const editPost = state.posts.map((todo) =>
