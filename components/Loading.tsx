@@ -18,7 +18,7 @@ const Loader = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.5);
-    z-index: 10;
+    z-index: 9999;
 `;
 
 export default Loading;

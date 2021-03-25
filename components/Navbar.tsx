@@ -18,7 +18,7 @@ const Navbar: React.FC = (): JSX.Element => {
     }
 
     return (
-        <header>
+        <header className="sticky-top">
             <Header expand="md" bg="dark" variant="dark">
                 <Link href="/">
                     <a className="navbar-brand">Blog</a>

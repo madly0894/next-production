@@ -63,6 +63,7 @@ const CreatePost: React.FC<Props> = ({ post_createPost }: Props): JSX.Element =>
                                 type="email"
                                 placeholder="Title"
                                 onChange={handleChangeInput}
+                                required
                             />
                         </Form.Group>
                         <Form.Group controlId="formBasicBody">
@@ -73,10 +74,11 @@ const CreatePost: React.FC<Props> = ({ post_createPost }: Props): JSX.Element =>
                                 rows={5}
                                 placeholder="Body"
                                 onChange={handleChangeTextArea}
+                                required
                             />
                         </Form.Group>
                         <Form.Group>
-                            <Button type="button" onClick={handleCreatePost}>
+                            <Button type="button" onClick={handleCreatePost} disabled={!state.title || !state.body}>
                                 Create a new post
                             </Button>
                         </Form.Group>

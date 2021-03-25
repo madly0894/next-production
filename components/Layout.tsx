@@ -24,7 +24,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children, title }: Layou
             <Jumbotron className="bg-dark text-center text-white rounded-0 mb-0 p-2">
                 <h1 className="display-5">{title}</h1>
             </Jumbotron>
-            <main className="my-4">{children}</main>
+            <main className="py-4" style={{ overflow: 'auto', height: 'calc(100vh - 184px)' }}>{children}</main>
             <Footer />
         </div>
     );

@@ -23,7 +23,7 @@ type Props = {
     put_updatePost(id: number | string, title: string, body: string): void;
 };
 
-type State = {
+export type State = {
     open: boolean;
     id: number | string;
     title: string;
@@ -58,11 +58,11 @@ const Index: React.FC<Props> = ({ posts, loading, get_allPosts, delete_post, put
         }));
     }
 
-    const handleOpenModal = (id: number | string) => {
+    const handleOpenModal = (post: Post) => {
         setState({
             ...state,
             open: true,
-            id: id,
+            ...post,
         });
     };
 
@@ -149,17 +149,23 @@ const Index: React.FC<Props> = ({ posts, loading, get_allPosts, delete_post, put
                                                 </CardBox>
                                             </a>
                                         </Link>
-                                        <div className="card-body" style={{ height: 200, overflow: 'auto' }}>
+                                        <div className="card-body">
                                             <h3 className="card-title font-weight-bold text-dark text-capitalize">
                                                 {p.title}
                                             </h3>
-                                            <p className="card-text text-muted">{p.body}</p>
+                                            <p
+                                                className="card-text text-muted"
+                                                style={{
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {p.body}
+                                            </p>
                                         </div>
                                         <div className="card-footer">
-                                            <button
-                                                className="btn btn-primary mr-2"
-                                                onClick={() => handleOpenModal(p.id)}
-                                            >
+                                            <button className="btn btn-primary mr-2" onClick={() => handleOpenModal(p)}>
                                                 Edit
                                             </button>
                                             <button className="btn btn-danger" onClick={() => handleDelete(p.id)}>
@@ -174,8 +180,7 @@ const Index: React.FC<Props> = ({ posts, loading, get_allPosts, delete_post, put
                 )}
             </div>
             <EditPost
-                open={state.open}
-                postId={state.id}
+                state={state}
                 handleCloseModal={handleCloseModal}
                 handleEdit={handleEdit}
                 handleChangeInput={handleChangeInput}
@@ -207,7 +212,7 @@ const CardOverlay = styled.div.attrs({
         top: 0;
         left: 0;
         right: 0;
-        bottom: 263px;
+        bottom: 172px;
         cursor: pointer;
         span {
             color: #fff;
