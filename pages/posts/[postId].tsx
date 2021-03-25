@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 // @ts-ignore
 import { useRouter } from 'next/router';
 // @ts-ignore
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 // Redux
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -98,8 +98,8 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
     );
 };
 
-PostId.getInitialProps = async ({ query }) => {
-    return { query };
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+    return { props: { query } };
 };
 
 function mapStateToProps(state) {
