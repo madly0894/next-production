@@ -12,7 +12,7 @@ const initialState: StateReducer = {
     loading: false,
 };
 
-export const postReducer = (state = initialState, action: any) => {
+export const postReducer = (state = initialState, action: any): StateReducer => {
     switch (action.type) {
         case types.GET_POSTS:
             return {
@@ -38,7 +38,7 @@ export const postReducer = (state = initialState, action: any) => {
             const newState = state.posts.filter((val) => val.id !== action.index);
 
             return {
-                ...state.posts,
+                ...state,
                 posts: newState,
             };
         case types.GET_COMMENTS:
@@ -53,7 +53,7 @@ export const postReducer = (state = initialState, action: any) => {
                 post: {
                     ...state.post,
                     comments: [...state.post.comments, action.comment],
-                }
+                },
             };
         case types.SET_LOADING:
             return {

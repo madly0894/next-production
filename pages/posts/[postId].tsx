@@ -11,7 +11,7 @@ import { get_comments, post_createComment } from '../../redux/actions/postAction
 // Components
 import Layout from '../../components/Layout';
 import { Button, Card, ListGroup } from 'react-bootstrap';
-import { Post, Comments } from '../../redux/typesTS';
+import { Post } from '../../redux/typesTS';
 
 type PostId = {
     postId: string;
@@ -87,7 +87,7 @@ const PostId: NextPage<Props> = ({ post, get_comments, post_createComment }: Pro
                         <hr />
                         <h5>Comments</h5>
                         <ListGroup variant="flush">
-                            {post?.comments?.map((c: Comments) => {
+                            {post?.comments?.map((c) => {
                                 return <ListGroup.Item key={c.id}>{c?.body}</ListGroup.Item>;
                             })}
                         </ListGroup>

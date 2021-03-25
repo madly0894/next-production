@@ -4,10 +4,11 @@ import axios from 'axios';
 // Api
 import { API } from '../../constants';
 import { ThunkAction } from 'redux-thunk';
+import { Post, Posts, CreatePost, UpdatePost, Comment } from '../typesTS';
 
 // GET List all posts
 
-type ThunkType = ThunkAction<Promise<void>, any, any, any>
+type ThunkType = ThunkAction<Promise<void>, any, any, any>;
 
 export const get_allPosts = (): ThunkType => async (dispatch) => {
     dispatch(setLoading());
@@ -25,7 +26,12 @@ export const get_allPosts = (): ThunkType => async (dispatch) => {
     }
 };
 
-export const dispatchFetchPosts = (posts) => ({
+type GetPosts = {
+    type: typeof types.GET_POSTS;
+    posts: Posts;
+};
+
+export const dispatchFetchPosts = (posts: Posts): GetPosts => ({
     type: types.GET_POSTS,
     posts: posts,
 });
@@ -48,9 +54,14 @@ export const get_comments = (id: number): ThunkType => async (dispatch) => {
     }
 };
 
-export const dispatchFetchComments = (post) => ({
+type GetComments = {
+    type: typeof types.GET_COMMENTS;
+    post: Post;
+};
+
+export const dispatchFetchComments = (post: Post): GetComments => ({
     type: types.GET_COMMENTS,
-    post: post,
+    post,
 });
 
 // POST Create a post
@@ -74,9 +85,14 @@ export const post_createPost = (title: string, body: string): ThunkType => async
     }
 };
 
-export const dispatchAddPost = (addPost) => ({
+type AddPost = {
+    type: typeof types.ADD_POST;
+    addPost: CreatePost;
+};
+
+export const dispatchAddPost = (addPost: CreatePost): AddPost => ({
     type: types.ADD_POST,
-    addPost: addPost,
+    addPost,
 });
 
 // PUT Update a post
@@ -100,9 +116,14 @@ export const put_updatePost = (id: number, title: string, body: string): ThunkTy
     }
 };
 
-export const dispatchEditPost = (edit) => ({
+type EditPost = {
+    type: typeof types.EDIT_POST;
+    edit: UpdatePost;
+};
+
+export const dispatchEditPost = (edit: UpdatePost): EditPost => ({
     type: types.EDIT_POST,
-    edit: edit,
+    edit,
 });
 
 // DEL Delete a post
@@ -120,7 +141,12 @@ export const delete_post = (id: number): ThunkType => async (dispatch) => {
     }
 };
 
-export const dispatchDeletePost = (index) => ({
+type DeletePost = {
+    type: typeof types.REMOVE_POST;
+    index: number;
+};
+
+export const dispatchDeletePost = (index: number): DeletePost => ({
     type: types.REMOVE_POST,
     index,
 });
@@ -146,9 +172,14 @@ export const post_createComment = (body: string, postId: number): ThunkType => a
     }
 };
 
-export const dispatchFetchComment = (comment) => ({
+type FetchComment = {
+    type: typeof types.ADD_COMMENT;
+    comment: Comment;
+};
+
+export const dispatchFetchComment = (comment: Comment): FetchComment => ({
     type: types.ADD_COMMENT,
-    comment: comment,
+    comment,
 });
 
 export const setLoading = () => ({
